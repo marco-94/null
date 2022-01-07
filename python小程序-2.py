@@ -13,7 +13,7 @@ interface_address = Label(root, text='URL')
 interface_address.grid(row=0, column=0, pady=5, sticky=E)
 interface_address_loop_text = StringVar()
 interface_address_loop = Entry(root, width=70, textvariable=interface_address_loop_text)
-interface_address_loop_text.set('https://rd.bosma.cn/bosma-smart-frontend/api/ipcdata/getEventWithTagByStatus')
+interface_address_loop_text.set('https://')
 interface_address_loop.grid(row=0, column=1, pady=5, sticky='EW')
 
 token_input = Label(root, text='TOKEN')
