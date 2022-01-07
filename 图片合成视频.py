@@ -42,7 +42,7 @@ def pic_to_video(img_path, video_path):
     """
     images = os.listdir(img_path)
     fps = 1   # 帧率
-    four_cc = cv2.VideoWriter_fourcc(*"mp4v")
+    four_cc = cv2.VideoWriter_fourcc(*"MJPG")
     im = Image.open(img_path + images[0])
     video_writer = cv2.VideoWriter(video_path, four_cc, fps, im.size)
     for im_name in range(len(images)):
@@ -51,9 +51,9 @@ def pic_to_video(img_path, video_path):
     video_writer.release()
 
 
-# img_paths = "D:/test/yjyz/test_data/picture/environment/"
-# video_paths = "D:/test/yjyz/test_data/video/video_test_mp3.mp4"
-# pic_to_video(img_paths, video_paths)
+img_paths = "D:/test/yjyz/test_data/picture/environment/"
+video_paths = "D:/test/yjyz/test_data/video/video_test_avi.avi"
+pic_to_video(img_paths, video_paths)
 
 
 def video_add_music():
@@ -65,9 +65,9 @@ def video_add_music():
     video_file = 'D:/test/yjyz/test_data/video/test11-video-mov.mov'
     video = VideoFileClip(video_file)
     # 音频文件
-    videos = video.set_audio(AudioFileClip('C:/Users/24540/Desktop/test_mp3.mp3'))
+    videos = video.set_audio(AudioFileClip('C:/Users/24540/Desktop/test_avi.avi'))
     # 保存合成视频，注意加上参数audio_codec='aac'，否则音频无声音，部分需要指定编辑器参数codec="libx264"
-    videos.write_videofile('D:/test/yjyz/test_data/video/test11-video-mov-mp3.mov', audio_codec='aac', codec="libx264")
+    videos.write_videofile('D:/test/yjyz/test_data/video/test11-video--avi.avi', audio_codec='aac', codec="libx264")
 
 
 # video_add_music()
