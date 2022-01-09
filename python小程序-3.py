@@ -11,13 +11,13 @@ from Crypto.PublicKey import RSA
 
 # 为了方便维护，全部接口地址写一起
 # 查询验证码接口
-select_url = "/ops.web.api/sms/api/v1/task/page/send"
+select_url = ""
 # 获取公钥接口
-get_public_key_url = "/sso/security/k"
+get_public_key_url = ""
 # 登录的三个接口
-authorize_url = "/sso/oidc/authorize/"
-execute_url = "/sso/oidc/execute/"
-access_token_url = "/sso/oidc/accessToken/"
+authorize_url = ""
+execute_url = ""
+access_token_url = ""
 
 
 root = Tk()
@@ -92,9 +92,9 @@ def get_domain():
     :return:
     """
     if environment_loop.get() == "beta":
-        domain = "https://api-beta.yjzf.com"
+        domain = ""
     else:
-        domain = "https://api.yjzf.com"
+        domain = ""
     return domain
 
 
