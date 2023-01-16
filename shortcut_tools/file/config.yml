@@ -1,0 +1,13 @@
+select_url:
+get_public_key_url:
+authorize_url:
+execute_url:
+access_token_url:
+domain_beta:
+domain_prod:
+username: ''
+password: ''
+phone: ''
+brand_id: ''
+organ_id: ''
+city_code: ''
