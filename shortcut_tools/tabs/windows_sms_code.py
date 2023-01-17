@@ -10,7 +10,7 @@ from tkinter import messagebox
 import base64
 from Crypto.Cipher import PKCS1_v1_5
 from Crypto.PublicKey import RSA
-from shortcut_tools.common import default_configuration, get_config, yaml_update
+from shortcut_tools.common import base_function, get_config, yaml_update
 
 
 class WindowsSmsCode:
@@ -114,27 +114,11 @@ class WindowsSmsCode:
         show_code_text.pack()
         show_code_root.mainloop()
 
-    @staticmethod
-    def get_time():
+    def delete_input(self):
         """
-        获取当前时间的时间戳和过去五分钟的时间戳
-        """
-        current_time = round(time.time() * 1000)
-        past_time = round(time.time() * 1000 - 300000)
-        return current_time, past_time
-
-    def get_domain(self):
-        """
-        获取查询环境域名
+        删除保存的信息
         :return:
         """
-        if self.environment_loop.get() == "beta":
-            domain = self.data["domain_beta"]
-        else:
-            domain = self.data["domain_prod"]
-        return domain
-
-    def delete_input(self):
         self.ops_username_input_loop.delete(0, 'end')
         self.erp_username_input_loop.delete(0, 'end')
         self.password_input_loop.delete(0, 'end')
@@ -150,11 +134,12 @@ class WindowsSmsCode:
         public_key = False
         for _ in range(1):
             # 获取公钥
-            get_public_key_response = requests.get(url=self.get_domain() + self.data["get_public_key_url"])
+            domain = base_function.PublicFunction(self).get_domain(self.environment_loop.get())
+            get_public_key_response = requests.get(url=domain + self.data["get_public_key_url"])
 
             # 如果接口报错或返回错误，则提示错误，并结束退出
             if get_public_key_response.status_code != 200 or get_public_key_response.json()['code'] != '200':
-                default_configuration.DefaultConfiguration.show_response_error(get_public_key_response)
+                base_function.DefaultConfiguration.show_response_error(get_public_key_response)
                 break
 
             public_keys = get_public_key_response.json()["data"]
@@ -189,6 +174,7 @@ class WindowsSmsCode:
         """
         access_token = False
         password = self.encrpt(password, self.get_public_key())
+        domain = base_function.PublicFunction(self).get_domain(self.environment_loop.get())
         if password:
             for _ in range(1):
                 headers = {"Content-Type": "application/json"}
@@ -200,12 +186,12 @@ class WindowsSmsCode:
                     "state": "e268443e43d93dab7ebef303bbe9642f",
                     "auth_type": "BPassword"
                 }
-                authorize_response = requests.get(url=self.get_domain() + self.data["authorize_url"],
+                authorize_response = requests.get(url=domain + self.data["authorize_url"],
                                                   params=authorize_params)
 
                 # 如果接口报错或返回错误，则提示错误，并结束退出
                 if authorize_response.status_code != 200 or authorize_response.json()['code'] != '200':
-                    default_configuration.DefaultConfiguration.show_response_error(authorize_response)
+                    base_function.DefaultConfiguration.show_response_error(authorize_response)
                     break
 
                 code_key = authorize_response.json()['data']['code_key']
@@ -220,13 +206,13 @@ class WindowsSmsCode:
                     "code_key": code_key
                 }
 
-                execute_response = requests.post(url=self.get_domain() + self.data["execute_url"],
+                execute_response = requests.post(url=domain + self.data["execute_url"],
                                                  headers=headers,
                                                  json=execute_json)
 
                 # 如果接口报错或返回错误，则提示错误，并结束退出
                 if execute_response.status_code != 200 or execute_response.json()['code'] != '200':
-                    default_configuration.DefaultConfiguration.show_response_error(execute_response)
+                    base_function.DefaultConfiguration.show_response_error(execute_response)
                     break
 
                 code = execute_response.json()['data']['code']
@@ -239,13 +225,13 @@ class WindowsSmsCode:
                     "state": state,
                     "userId": user_id
                 }
-                access_token_response = requests.post(url=self.get_domain() + self.data["access_token_url"],
+                access_token_response = requests.post(url=domain + self.data["access_token_url"],
                                                       headers=headers,
                                                       json=access_json)
 
                 # 如果接口报错或返回错误，则提示错误，并结束退出
                 if access_token_response.status_code != 200 or access_token_response.json()['code'] != '200':
-                    default_configuration.DefaultConfiguration.show_response_error(access_token_response)
+                    base_function.DefaultConfiguration.show_response_error(access_token_response)
                     break
 
                 access_token = access_token_response.json()['data']['access_token']
@@ -256,6 +242,7 @@ class WindowsSmsCode:
         查询验证码部分，只查询五分钟内的验证码
         :return:
         """
+        domain = base_function.PublicFunction(self).get_domain(self.environment_loop.get())
         try:
             for _ in range(1):
                 # 判断输入框是否为空或非法输入
@@ -298,9 +285,9 @@ class WindowsSmsCode:
                     yaml_update.UpdateYaml().up_yml("password", self.password_input_loop_text.get())
 
                 # 判断正确之后，先给个提示信息
-                # default_configuration.DefaultConfiguration(self).show_message("查询中，请等待！")
+                base_function.DefaultConfiguration(self).show_message("查询中，请等待！")
 
-                url = self.get_domain() + self.interface_address_loop_text.get()
+                url = domain + self.interface_address_loop_text.get()
                 username = self.erp_username_input_loop_text.get()
                 password = self.password_input_loop_text.get()
 
@@ -314,8 +301,8 @@ class WindowsSmsCode:
                         "receiverPhone": self.ops_username_input_loop_text.get(),
                         "smsBusinessType": 2,
                         "condition": {
-                            "createTimeEnd": self.get_time()[0],
-                            "createTimeStart": self.get_time()[1]},
+                            "createTimeEnd": base_function.DefaultConfiguration.get_time()[0],
+                            "createTimeStart": base_function.DefaultConfiguration.get_time()[1]},
                         "pageNo": 1,
                         "rowCntPerPage": 1
                     }
@@ -329,7 +316,7 @@ class WindowsSmsCode:
                         break
                     else:
                         code = eval(events_status_response["data"]["list"][0]["sendText"])["code"]
-                        default_configuration.DefaultConfiguration.show_result(code, "验证码")
+                        base_function.DefaultConfiguration.show_result(code, "验证码")
                         return code
         except KeyError:
             pass

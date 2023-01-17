@@ -1,13 +1,13 @@
-select_url:
-get_public_key_url:
-authorize_url:
-execute_url:
-access_token_url:
-domain_beta:
-domain_prod:
-username: ''
-password: ''
-phone: ''
+select_url: /ops.web.api/sms/api/v1/task/page/send
+get_public_key_url: /sso/security/k
+authorize_url: /sso/oidc/authorize/
+execute_url: /sso/oidc/execute/
+access_token_url: /sso/oidc/accessToken/
+domain_beta: https://api-beta.yjzf.com
+domain_prod: https://api.yjzf.com
+username: '13228433898'
+password: A1234567
+phone: '19163881627'
 brand_id: ''
 organ_id: ''
 city_code: ''

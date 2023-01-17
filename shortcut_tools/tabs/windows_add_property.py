@@ -8,7 +8,7 @@ from tkinter import messagebox
 import base64
 from Crypto.Cipher import PKCS1_v1_5
 from Crypto.PublicKey import RSA
-from shortcut_tools.common import default_configuration, get_config, yaml_update
+from shortcut_tools.common import base_function, get_config, yaml_update
 
 
 class WindowsAddProperty:
