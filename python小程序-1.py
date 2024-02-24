@@ -3,6 +3,7 @@ import requests
 from tkinter import messagebox, filedialog
 from openpyxl import *
 
+
 root = Tk()
 root.title('信息查询')
 root.geometry('550x400')
